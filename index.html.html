@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bangalore → Ooty | Bike Trip | June 19–21, 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --forest: #1a2e1a;
+    --moss: #2d4a2d;
+    --sage: #4a7c59;
+    --mint: #7ab89a;
+    --mist: #b8d4c4;
+    --cream: #f5f0e8;
+    --amber: #d4873a;
+    --warm: #f0e6d3;
+    --red: #c0392b;
+    --ink: #1a1a1a;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  /* HERO */
+  .hero {
+    background: var(--forest);
+    color: var(--cream);
+    padding: 60px 40px 50px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 70% 30%, rgba(74,124,89,0.4) 0%, transparent 60%),
+                radial-gradient(ellipse at 20% 80%, rgba(45,74,45,0.6) 0%, transparent 50%);
+  }
+  .hero-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--mint);
+    margin-bottom: 16px;
+    position: relative;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 6vw, 64px);
+    line-height: 1.1;
+    position: relative;
+    margin-bottom: 12px;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--mint);
+  }
+  .hero-sub {
+    font-size: 14px;
+    color: var(--mist);
+    position: relative;
+    margin-bottom: 36px;
+  }
+  .hero-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    position: relative;
+  }
+  .pill {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 12px;
+    color: var(--mist);
+    font-family: 'DM Mono', monospace;
+  }
+  .pill.highlight {
+    background: var(--sage);
+    border-color: var(--sage);
+    color: white;
+  }
+
+  /* ALERT BOX */
+  .alert {
+    background: #fff8f0;
+    border-left: 4px solid var(--amber);
+    padding: 16px 20px;
+    margin: 28px 40px;
+    border-radius: 0 8px 8px 0;
+    font-size: 13.5px;
+  }
+  .alert strong { color: var(--amber); font-weight: 600; }
+  .alert .alert-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  /* OVERVIEW GRID */
+  .overview {
+    padding: 32px 40px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+  }
+  .overview-card {
+    background: var(--forest);
+    color: var(--cream);
+    border-radius: 12px;
+    padding: 18px 20px;
+  }
+  .overview-card .oc-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--mint);
+    margin-bottom: 6px;
+  }
+  .overview-card .oc-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+  }
+  .overview-card .oc-sub {
+    font-size: 11px;
+    color: var(--mist);
+    margin-top: 2px;
+  }
+
+  /* SECTION TITLE */
+  .section-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--sage);
+    padding: 0 40px;
+    margin-bottom: 4px;
+    margin-top: 40px;
+  }
+  h2.day-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    padding: 0 40px;
+    margin-bottom: 24px;
+    color: var(--forest);
+  }
+  h2.day-title span {
+    font-style: italic;
+    color: var(--sage);
+    font-size: 20px;
+    font-weight: 400;
+    display: block;
+    margin-top: 2px;
+  }
+
+  /* SCHEDULE TABLE */
+  .schedule-wrap {
+    padding: 0 40px;
+    margin-bottom: 28px;
+    overflow-x: auto;
+  }
+  .schedule {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 13.5px;
+  }
+  .schedule th {
+    background: var(--forest);
+    color: var(--mint);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 10px 16px;
+    text-align: left;
+  }
+  .schedule th:first-child { border-radius: 8px 0 0 0; }
+  .schedule th:last-child { border-radius: 0 8px 0 0; }
+  .schedule td {
+    padding: 10px 16px;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    vertical-align: top;
+  }
+  .schedule tr:last-child td { border-bottom: none; }
+  .schedule tr:nth-child(even) td { background: rgba(0,0,0,0.02); }
+  .schedule .time {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--sage);
+    white-space: nowrap;
+    font-weight: 500;
+  }
+  .schedule .activity { font-weight: 400; }
+  .schedule .tag {
+    display: inline-block;
+    background: var(--warm);
+    border-radius: 4px;
+    padding: 1px 7px;
+    font-size: 11px;
+    color: var(--amber);
+    margin-left: 6px;
+    font-family: 'DM Mono', monospace;
+  }
+  .schedule .tag.green { background: #e8f5ee; color: var(--sage); }
+  .schedule .tag.red { background: #fdf0ef; color: var(--red); }
+
+  /* TWO-COL GRID */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding: 0 40px;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
+  .card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid rgba(0,0,0,0.07);
+  }
+  .card h3 {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-bottom: 12px;
+  }
+  .card ul { list-style: none; }
+  .card ul li {
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    font-size: 13.5px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .card ul li:last-child { border-bottom: none; }
+  .card ul li .icon { font-size: 16px; flex-shrink: 0; }
+  .card ul li strong { display: block; font-weight: 500; }
+  .card ul li small { color: #777; font-size: 12px; }
+  .card ul li .cost {
+    margin-left: auto;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--amber);
+    white-space: nowrap;
+  }
+
+  /* HOTEL TABLE */
+  .hotel-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 13px;
+  }
+  .hotel-table th {
+    background: var(--moss);
+    color: var(--mint);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 8px 14px;
+    text-align: left;
+  }
+  .hotel-table td { padding: 9px 14px; border-bottom: 1px solid rgba(0,0,0,0.06); }
+  .hotel-table tr:last-child td { border-bottom: none; }
+  .hotel-table .budget-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: #e8f5ee;
+    color: var(--sage);
+  }
+  .hotel-table .mid-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: #fff8f0;
+    color: var(--amber);
+  }
+
+  /* DIVIDER */
+  .divider {
+    border: none;
+    border-top: 1px solid rgba(0,0,0,0.08);
+    margin: 36px 40px;
+  }
+
+  /* DOCS SECTION */
+  .docs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 14px;
+    padding: 0 40px;
+    margin-bottom: 28px;
+  }
+  .doc-item {
+    background: white;
+    border: 1px solid rgba(0,0,0,0.07);
+    border-radius: 10px;
+    padding: 14px 16px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    font-size: 13px;
+  }
+  .doc-item .doc-icon { font-size: 20px; flex-shrink: 0; }
+  .doc-item strong { display: block; font-weight: 500; margin-bottom: 2px; }
+  .doc-item small { color: #777; font-size: 12px; }
+
+  /* BUDGET */
+  .budget-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 13.5px;
+  }
+  .budget-table th {
+    background: var(--forest);
+    color: var(--mint);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 10px 16px;
+    text-align: left;
+  }
+  .budget-table td { padding: 10px 16px; border-bottom: 1px solid rgba(0,0,0,0.06); }
+  .budget-table tr:last-child td { border-bottom: none; font-weight: 600; font-size: 15px; background: var(--warm); }
+  .budget-table td:last-child { text-align: right; font-family: 'DM Mono', monospace; font-size: 13px; color: var(--forest); }
+  .budget-table tr:last-child td:last-child { color: var(--sage); font-size: 16px; }
+
+  /* RISK */
+  .risk-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    padding: 0 40px;
+    margin-bottom: 28px;
+  }
+  @media (max-width: 700px) { .risk-grid { grid-template-columns: 1fr; } }
+  .risk-card {
+    border-radius: 12px;
+    padding: 18px 20px;
+    font-size: 13.5px;
+  }
+  .risk-card.warn { background: #fff8f0; border: 1px solid #f0d5b0; }
+  .risk-card.info { background: #f0f8f4; border: 1px solid #b0d4c0; }
+  .risk-card h3 {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .risk-card.warn h3 { color: var(--amber); }
+  .risk-card.info h3 { color: var(--sage); }
+  .risk-card ul { list-style: none; }
+  .risk-card ul li { padding: 3px 0; padding-left: 14px; position: relative; }
+  .risk-card ul li::before { content: '›'; position: absolute; left: 0; }
+
+  /* CHECKLIST */
+  .checklist-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    padding: 0 40px;
+    margin-bottom: 28px;
+  }
+  @media (max-width: 700px) { .checklist-grid { grid-template-columns: 1fr; } }
+  .check-group { background: white; border: 1px solid rgba(0,0,0,0.07); border-radius: 12px; padding: 18px 20px; }
+  .check-group h3 {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-bottom: 10px;
+  }
+  .check-group ul { list-style: none; }
+  .check-group ul li {
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+    font-size: 13px;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  .check-group ul li:last-child { border-bottom: none; }
+  .check-group ul li::before { content: '☐'; color: var(--mint); flex-shrink: 0; }
+
+  /* MAPS */
+  .maps-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    padding: 0 40px;
+    margin-bottom: 28px;
+  }
+  @media (max-width: 700px) { .maps-grid { grid-template-columns: 1fr; } }
+  .map-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: white;
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 10px;
+    padding: 14px 16px;
+    text-decoration: none;
+    color: var(--ink);
+    font-size: 13px;
+    transition: all 0.2s;
+  }
+  .map-link:hover { background: #f0f8f4; border-color: var(--mint); }
+  .map-link .map-icon { font-size: 22px; flex-shrink: 0; }
+  .map-link strong { display: block; font-weight: 500; font-size: 13px; }
+  .map-link small { color: #888; font-size: 11px; }
+  .map-link .arrow { margin-left: auto; color: var(--sage); font-size: 16px; }
+
+  /* EPASS BOX */
+  .epass-box {
+    margin: 0 40px 28px;
+    background: var(--forest);
+    color: var(--cream);
+    border-radius: 16px;
+    padding: 24px 28px;
+  }
+  .epass-box h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    margin-bottom: 10px;
+  }
+  .epass-box p { font-size: 13.5px; color: var(--mist); margin-bottom: 14px; }
+  .epass-box a {
+    display: inline-block;
+    background: var(--mint);
+    color: var(--forest);
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+  }
+  .epass-box .epass-steps {
+    margin-top: 14px;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .epass-box .epass-steps li {
+    background: rgba(255,255,255,0.08);
+    border-radius: 6px;
+    padding: 4px 12px;
+    font-size: 12px;
+    color: var(--mist);
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* FUEL BAR */
+  .fuel-stat {
+    padding: 0 40px;
+    margin-bottom: 28px;
+  }
+  .fuel-stat h3 {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-bottom: 14px;
+  }
+  .fuel-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 12px;
+    font-size: 13px;
+  }
+  .fuel-label { width: 130px; flex-shrink: 0; }
+  .fuel-bar-bg { flex: 1; background: rgba(0,0,0,0.07); border-radius: 4px; height: 8px; }
+  .fuel-bar { height: 8px; border-radius: 4px; background: var(--sage); }
+  .fuel-cost { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--amber); width: 80px; text-align: right; }
+
+  /* FOOTER */
+  footer {
+    background: var(--forest);
+    color: var(--mist);
+    padding: 28px 40px;
+    font-size: 12px;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.5px;
+    margin-top: 40px;
+  }
+  footer strong { color: var(--mint); }
+
+  @media (max-width: 600px) {
+    .hero, .overview, .section-title, h2.day-title, .schedule-wrap,
+    .two-col, .divider, .docs-grid, .budget-table-wrap,
+    .maps-grid, .risk-grid, .checklist-grid, .epass-box,
+    .fuel-stat, footer { padding-left: 20px; padding-right: 20px; }
+    .alert { margin: 20px; }
+    .overview { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag">🏍️ Bike Trip Itinerary · June 2026</div>
+  <h1>Bangalore<br>to <em>Ooty</em></h1>
+  <div class="hero-sub">Electronic City · 2 Bikes · 2 Couples · 3 Days of Pure Bliss</div>
+  <div class="hero-pills">
+    <span class="pill highlight">Hunter 350 + Scram 450</span>
+    <span class="pill">Jun 19 → 21</span>
+    <span class="pill">~570 km round trip</span>
+    <span class="pill">Budget ≤ ₹6k/head</span>
+    <span class="pill">Monsoon Ride ⛈️</span>
+  </div>
+</div>
+
+<!-- BANDIPUR ALERT -->
+<div class="alert">
+  <span class="alert-title">⚠️ Critical — Bandipur Timings</span>
+  <strong>Two-wheelers must cross Bandipur before 6:00 PM.</strong> Night ban is 9 PM–6 AM for all vehicles. The forest can close even earlier if there's elephant movement. Leave Electronic City by <strong>6:00 AM sharp</strong> on Day 1 to safely pass through Bandipur by 10:30–11:00 AM, giving you a massive 7-hour buffer.
+</div>
+
+<!-- TRIP OVERVIEW -->
+<p class="section-title">Trip Overview</p>
+<div class="overview">
+  <div class="overview-card">
+    <div class="oc-label">Route</div>
+    <div class="oc-value" style="font-size:15px;">Blr → Mysore → Gundlupet → Bandipur → Masinagudi → Ooty</div>
+  </div>
+  <div class="overview-card">
+    <div class="oc-label">Total Distance</div>
+    <div class="oc-value">~570 km</div>
+    <div class="oc-sub">~285 km each way</div>
+  </div>
+  <div class="overview-card">
+    <div class="oc-label">Petrol Price</div>
+    <div class="oc-value">₹110.97</div>
+    <div class="oc-sub">Per litre, Bangalore (Jun 2026)</div>
+  </div>
+  <div class="overview-card">
+    <div class="oc-label">Difficulty</div>
+    <div class="oc-value">Moderate</div>
+    <div class="oc-sub">Ghat roads, monsoon conditions</div>
+  </div>
+  <div class="overview-card">
+    <div class="oc-label">Best Window</div>
+    <div class="oc-value">6 AM</div>
+    <div class="oc-sub">Depart Electronic City</div>
+  </div>
+  <div class="overview-card">
+    <div class="oc-label">Return By</div>
+    <div class="oc-value">6:30 PM</div>
+    <div class="oc-sub">Electronic City, Jun 21</div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- DAY 1 -->
+<p class="section-title">Day 1 — Friday, June 19</p>
+<h2 class="day-title">Into the Nilgiris <span>Electronic City → Ooty · ~285 km · 5.5–6.5 hrs riding</span></h2>
+
+<div class="schedule-wrap">
+  <table class="schedule">
+    <thead><tr><th>Time</th><th>Activity</th></tr></thead>
+    <tbody>
+      <tr><td class="time">05:30 AM</td><td class="activity">Wake up, quick check — rain gear packed, e-Pass QR ready on both phones</td></tr>
+      <tr><td class="time">06:00 AM</td><td class="activity">🚦 <strong>Depart Electronic City</strong> — take Hosur Road → Krishnagiri Outer Ring → NH 275 (Mysore Road) <span class="tag">Depart sharp</span></td></tr>
+      <tr><td class="time">07:30 AM</td><td class="activity">☕ Breakfast stop — <strong>Hotel Kamat, Channapatna</strong> (on NH 275, right side). Idli–vada, kesari bath, filter coffee. ~₹80–100/head</td></tr>
+      <tr><td class="time">08:15 AM</td><td class="activity">Continue on NH 275 through Maddur, Mandya. Flat cruising highway.</td></tr>
+      <tr><td class="time">09:45 AM</td><td class="activity">⛽ <strong>Fuel up at BPCL / HP pump, Mysore Ring Road</strong> — top off both tanks before Mysore (150 km mark). No need to enter city.</td></tr>
+      <tr><td class="time">10:15 AM</td><td class="activity">Bypass Mysore city via Ring Road → NH 766 towards Nanjangud → Gundlupet</td></tr>
+      <tr><td class="time">11:00 AM</td><td class="activity">🌿 <strong>Enter Bandipur Tiger Reserve</strong> — Karnataka side checkpost. Papers check. Ride at 40 km/h max. Silence engines when forest officials signal. <span class="tag red">Wildlife Zone</span></td></tr>
+      <tr><td class="time">11:40 AM</td><td class="activity">🛂 <strong>Masinagudi Checkpost (Tamil Nadu border)</strong> — Show e-Pass QR + RC book. Pay Green Tax in cash (~₹25–50/bike). Signal is poor — have QR downloaded offline. <span class="tag">TN Entry</span></td></tr>
+      <tr><td class="time">12:00 PM</td><td class="activity">🏔️ Begin <strong>Sigur Ghat climb</strong> — 36 hairpin bends. Single lane. Magnificent views. Take it slow, enjoy it — this is the highlight of Day 1 riding.</td></tr>
+      <tr><td class="time">01:00 PM</td><td class="activity">🍽️ <strong>Lunch — Hotel Nahar Restaurant or Welbeck Residency, Ooty</strong>. Nilgiris mutton curry, ghee rice, or simple veg thali. ~₹150–200/head</td></tr>
+      <tr><td class="time">02:30 PM</td><td class="activity">🏨 Check in to hotel. Freshen up.</td></tr>
+      <tr><td class="time">04:00 PM</td><td class="activity">🌺 <strong>Botanical Garden stroll</strong> — easy walk, couples-friendly. Don't rush. Entry ₹50/head.</td></tr>
+      <tr><td class="time">06:30 PM</td><td class="activity">🛍️ Ooty Commercial Street / Charing Cross area — chocolate shops, tea shops. Buy Ooty homemade chocolates and Nilgiri tea.</td></tr>
+      <tr><td class="time">08:00 PM</td><td class="activity">🍜 Dinner — <strong>Shinkows Restaurant, Ooty</strong> (Chinese-Indian, very popular, cozy for couples) or Hotel Woodlands</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="two-col">
+  <div class="card">
+    <h3>🛣️ Road Notes — Day 1</h3>
+    <ul>
+      <li><span class="icon">✅</span><div><strong>NH 275 (Mysore Road)</strong><small>Excellent 4-lane highway. Smooth, fast. Easy for both bikes.</small></div></li>
+      <li><span class="icon">⚠️</span><div><strong>Bandipur Forest Stretch</strong><small>~20 km. Narrow 2-lane. 40 km/h limit strictly enforced. Wildlife may cross anytime.</small></div></li>
+      <li><span class="icon">🌧️</span><div><strong>Sigur Ghat (36 hairpins)</strong><small>June = wet, mossy roads. Fog likely. Ride slow, use engine braking. Don't overtake on bends.</small></div></li>
+      <li><span class="icon">📡</span><div><strong>No Signal Zone</strong><small>Entire Bandipur stretch. Download e-Pass QR and offline maps before Gundlupet.</small></div></li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>🏨 Stay Options — Ooty (2 Nights)</h3>
+    <table class="hotel-table">
+      <thead><tr><th>Tier</th><th>Hotel</th><th>Approx.</th></tr></thead>
+      <tbody>
+        <tr><td><span class="budget-tag">Budget</span></td><td>Hotel Nahar / TTDC Hotel Tamil Nadu</td><td>₹700–1,000/room</td></tr>
+        <tr><td><span class="budget-tag">Budget</span></td><td>Karpagam Residency (HMT Road)</td><td>₹900–1,200/room</td></tr>
+        <tr><td><span class="mid-tag">Mid</span></td><td>Hotel Mountfort / King's Cliff</td><td>₹1,500–2,000/room</td></tr>
+      </tbody>
+    </table>
+    <small style="color:#888; font-size:11px; margin-top:8px; display:block;">Book 2 rooms for 2 nights. Budget ₹1,400–2,400 total per couple for stay.</small>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- DAY 2 -->
+<p class="section-title">Day 2 — Saturday, June 20</p>
+<h2 class="day-title">The Chill Loop <span>Ooty Local Ride · ~80 km riding · Mostly vibes</span></h2>
+
+<div class="schedule-wrap">
+  <table class="schedule">
+    <thead><tr><th>Time</th><th>Activity</th></tr></thead>
+    <tbody>
+      <tr><td class="time">07:00 AM</td><td class="activity">☁️ <strong>Doddabetta Peak</strong> — ride up early before clouds roll in. Best views at dawn. 8 km from town. Entry ₹30. <span class="tag green">Best Early</span></td></tr>
+      <tr><td class="time">08:30 AM</td><td class="activity">🍳 Breakfast at <strong>Hyderabad Bakery, Ooty</strong> or hotel breakfast. Egg puffs, bread omelette, chai.</td></tr>
+      <tr><td class="time">10:00 AM</td><td class="activity">🏞️ <strong>Ride to Avalanche Lake</strong> — 28 km from Ooty through tea estates. This is the ride of the trip. Quiet road, mist, eucalyptus forest. Entry ₹100/person. <span class="tag green">Hidden Gem</span></td></tr>
+      <tr><td class="time">12:00 PM</td><td class="activity">☕ Chill at the lake. Carry snacks or use the small canteen. No rush. This is the vibe time.</td></tr>
+      <tr><td class="time">01:30 PM</td><td class="activity">🍽️ <strong>Lunch — Welbeck Residency Restaurant</strong> or return to Ooty. Ooty mutton biryani (try only if not Saturated!)</td></tr>
+      <tr><td class="time">03:00 PM</td><td class="activity">🌊 <strong>Pykara Lake & Waterfalls</strong> — 21 km from Ooty. Short hike to falls (June = flowing beautifully). Boat ride optional.</td></tr>
+      <tr><td class="time">05:30 PM</td><td class="activity">🫖 Tea estate view ride back — pull over at any tea estate bungalow view. Classic postcard Ooty moment.</td></tr>
+      <tr><td class="time">07:00 PM</td><td class="activity">🛁 Back at hotel. Rest, hot shower — you deserve it.</td></tr>
+      <tr><td class="time">08:30 PM</td><td class="activity">🍲 <strong>Dinner — Hotel Nahar or Shinkow's</strong>. Order butter chicken, roomali roti, mutton stew + appam. ~₹200–300/head</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="two-col">
+  <div class="card">
+    <h3>📍 Places — Curated, Not Crowded</h3>
+    <ul>
+      <li><span class="icon">🏔️</span><div><strong>Doddabetta Peak (2,637m)</strong><small>Highest point in Nilgiris. Go early to beat clouds and crowds.</small></div></li>
+      <li><span class="icon">🌊</span><div><strong>Avalanche Lake</strong><small>Underhyped. Beautiful ride through shola forest. Go here.</small></div></li>
+      <li><span class="icon">💧</span><div><strong>Pykara Falls</strong><small>June = full flow. 10-min walk from road. Non-negotiable.</small></div></li>
+      <li><span class="icon">🌺</span><div><strong>Botanical Garden</strong><small>Day 1 evening — leisurely stroll, not checklist.</small></div></li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>🍽️ Food Spots — Ooty</h3>
+    <ul>
+      <li><span class="icon">🌅</span><div><strong>Hotel Kamat, Channapatna</strong><small>Breakfast Day 1 — idli, vada, filter coffee.</small></div><span class="cost">~₹100</span></li>
+      <li><span class="icon">🌿</span><div><strong>Hotel Nahar, Ooty</strong><small>Solid veg/non-veg meals. Try Nilgiri mutton curry.</small></div><span class="cost">~₹200</span></li>
+      <li><span class="icon">🍜</span><div><strong>Shinkows, Ooty</strong><small>Cozy, great for couples. Chinese-Indian. Dinner must.</small></div><span class="cost">~₹250</span></li>
+      <li><span class="icon">☕</span><div><strong>Em Bakery (Commercial St)</strong><small>Fresh Ooty bread, jam, chocolate. Morning snack.</small></div><span class="cost">~₹60</span></li>
+      <li><span class="icon">🍫</span><div><strong>King Star Chocolates</strong><small>Best homemade Ooty chocs. Buy extra to carry home.</small></div><span class="cost">~₹150</span></li>
+    </ul>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- DAY 3 -->
+<p class="section-title">Day 3 — Sunday, June 21 · Return</p>
+<h2 class="day-title">Road Home <span>Ooty → Electronic City · ~285 km · Arrive by 6:30 PM</span></h2>
+
+<div class="schedule-wrap">
+  <table class="schedule">
+    <thead><tr><th>Time</th><th>Activity</th></tr></thead>
+    <tbody>
+      <tr><td class="time">06:00 AM</td><td class="activity">Wake up, pack. Quick morning chai from hotel or roadside.</td></tr>
+      <tr><td class="time">07:30 AM</td><td class="activity">🍽️ <strong>Breakfast at hotel</strong> or Hyderabad Bakery nearby. Don't skip — long ride ahead.</td></tr>
+      <tr><td class="time">08:00 AM</td><td class="activity">🏁 <strong>Depart Ooty</strong> — same route back: Sigur Ghat descent → Masinagudi → Bandipur <span class="tag">Key Time</span></td></tr>
+      <tr><td class="time">09:15 AM</td><td class="activity">Exit Tamil Nadu at Masinagudi checkpost. Enter Karnataka.</td></tr>
+      <tr><td class="time">09:30 AM</td><td class="activity">🌿 Cross Bandipur Forest (morning — fresh, cool, chance of wildlife sighting)</td></tr>
+      <tr><td class="time">10:15 AM</td><td class="activity">⛽ <strong>Fuel stop at Gundlupet</strong> — top both tanks here. Full stretch to Mysore/Bangalore next.</td></tr>
+      <tr><td class="time">10:30 AM</td><td class="activity">Continue NH 766 → Nanjangud → Mysore Ring Road bypass</td></tr>
+      <tr><td class="time">12:30 PM</td><td class="activity">🍽️ <strong>Lunch — RRR Restaurant, near Mandya / Maddur on NH 275</strong> — South Indian thali, curd rice, rasam. Legendary highway stop. ~₹150/head</td></tr>
+      <tr><td class="time">01:30 PM</td><td class="activity">Continue on NH 275. Smooth highway home.</td></tr>
+      <tr><td class="time">02:30 PM</td><td class="activity">☕ Optional chai break at Bidadi (famous for benne dose!) if you feel like it</td></tr>
+      <tr><td class="time">04:30 PM</td><td class="activity">🏙️ Enter Bangalore outskirts. Sunday evening traffic expected around Kanakapura Road junction.</td></tr>
+      <tr><td class="time">06:00–6:30 PM</td><td class="activity">🎯 <strong>Arrive Electronic City</strong> — on schedule ✅</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="two-col">
+  <div class="card">
+    <h3>🔄 Backup Route (if Bandipur issues)</h3>
+    <ul>
+      <li><span class="icon">🗺️</span><div><strong>Ooty → Gudalur → Sulthan Bathery → Hassan → Bangalore</strong><small>Use if Bandipur is unexpectedly closed or there's elephant blockage. ~340 km, adds 1–1.5 hrs. Less scenic but safe.</small></div></li>
+      <li><span class="icon">📞</span><div><strong>Check before leaving:</strong><small>Call Gundlupet Forest Checkpost: 08229-261016 or check Google Maps live traffic for NH 766.</small></div></li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>⛽ Fuel Stops — All 3 Days</h3>
+    <ul>
+      <li><span class="icon">⛽</span><div><strong>Electronic City HP / Indian Oil</strong><small>Fill up before leaving. Day 1 start.</small></div></li>
+      <li><span class="icon">⛽</span><div><strong>Mysore Ring Road BPCL</strong><small>150 km mark. Mandatory top-up.</small></div></li>
+      <li><span class="icon">⛽</span><div><strong>Gundlupet (before Bandipur)</strong><small>Last pump before forest. Don't skip!</small></div></li>
+      <li><span class="icon">⛽</span><div><strong>Gudalur (TN side)</strong><small>If needed after Masinagudi.</small></div></li>
+      <li><span class="icon">⛽</span><div><strong>Gundlupet (Day 3 return)</strong><small>First pump after Bandipur on return.</small></div></li>
+    </ul>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- EPASS -->
+<p class="section-title">🛂 Ooty E-Pass — Mandatory, Free</p>
+<div class="epass-box">
+  <h3>Apply Before You Enter Bandipur</h3>
+  <p>As of May 2026, the e-Pass is <strong>mandatory year-round</strong> for all non-TN-43 vehicles entering Nilgiris district. It's free, takes 5 minutes, and the QR code is shown at the Masinagudi checkpost. Mobile signal is nearly zero inside Bandipur — apply at home or before Gundlupet. One e-Pass per vehicle. Download the QR as PDF or screenshot.</p>
+  <a href="https://epass.tnega.org" target="_blank">→ epass.tnega.org</a>
+  <ul class="epass-steps">
+    <li>1. Visit epass.tnega.org</li>
+    <li>2. Select "Nilgiris District"</li>
+    <li>3. Enter vehicle number, travel date, passenger count</li>
+    <li>4. Upload RC book image</li>
+    <li>5. Submit → get QR code instantly</li>
+    <li>6. Screenshot/PDF the QR — no internet needed at checkpost</li>
+    <li>7. Pay Green Tax in cash at checkpost (~₹25–50/bike)</li>
+  </ul>
+</div>
+
+<!-- DOCUMENTS -->
+<p class="section-title">📋 Required Documents</p>
+<div class="docs-grid">
+  <div class="doc-item"><span class="doc-icon">🪪</span><div><strong>Driving Licence (DL)</strong><small>Original for rider + photocopy. Digital DigiLocker copy also accepted.</small></div></div>
+  <div class="doc-item"><span class="doc-icon">📄</span><div><strong>RC Book</strong><small>Original Registration Certificate for both bikes. Upload copy to e-Pass portal.</small></div></div>
+  <div class="doc-item"><span class="doc-icon">🛡️</span><div><strong>Insurance Certificate</strong><small>Valid third-party insurance. Physical/digital copy both work.</small></div></div>
+  <div class="doc-item"><span class="doc-icon">📱</span><div><strong>Ooty E-Pass QR</strong><small>Apply at epass.tnega.org. One per vehicle. Screenshot offline.</small></div></div>
+  <div class="doc-item"><span class="doc-icon">💵</span><div><strong>Cash for Green Tax</strong><small>~₹25–50 per bike. Collected at Masinagudi checkpost. Carry ₹200 cash.</small></div></div>
+  <div class="doc-item"><span class="doc-icon">🏥</span><div><strong>PUC Certificate</strong><small>Pollution Under Control certificate. Check validity before leaving.</small></div></div>
+  <div class="doc-item"><span class="doc-icon">🗺️</span><div><strong>Offline Maps Downloaded</strong><small>Google Maps: download Mysore, Ooty, Bandipur offline before leaving.</small></div></div>
+  <div class="doc-item"><span class="doc-icon">📞</span><div><strong>Emergency Numbers Saved</strong><small>Highway Helpline: 1033 | Ambulance: 108 | Forest: 08229-261016</small></div></div>
+</div>
+
+<hr class="divider">
+
+<!-- FUEL STATS -->
+<p class="section-title">⛽ Fuel Cost Breakdown</p>
+<div class="fuel-stat">
+  <h3>Based on ₹110.97/litre (Bangalore, June 2026)</h3>
+  <div class="fuel-row">
+    <span class="fuel-label">Hunter 350 (~36 kmpl)</span>
+    <div class="fuel-bar-bg"><div class="fuel-bar" style="width:72%"></div></div>
+    <span class="fuel-cost">~₹1,760/bike</span>
+  </div>
+  <div class="fuel-row">
+    <span class="fuel-label">Scram 450 (~30 kmpl)</span>
+    <div class="fuel-bar-bg"><div class="fuel-bar" style="width:88%; background:#d4873a"></div></div>
+    <span class="fuel-cost">~₹2,110/bike</span>
+  </div>
+  <small style="color:#777; font-size:12px;">Total 570 km round trip. Per person (2 on bike): Hunter ~₹880 | Scram ~₹1,055</small>
+</div>
+
+<!-- BUDGET SUMMARY -->
+<p class="section-title">💰 Budget Summary — Per Person</p>
+<div class="schedule-wrap">
+  <table class="budget-table">
+    <thead><tr><th>Category</th><th>Details</th><th>Est. Cost</th></tr></thead>
+    <tbody>
+      <tr><td>⛽ Fuel</td><td>~570 km round trip (avg Hunter + Scram per person)</td><td>₹880–1,060</td></tr>
+      <tr><td>🏨 Hotel</td><td>2 nights, budget stays, 2 people per room</td><td>₹700–1,200</td></tr>
+      <tr><td>🍽️ Food</td><td>3 days — breakfast, lunch, dinner, snacks</td><td>₹900–1,200</td></tr>
+      <tr><td>🌿 Entry Fees</td><td>Botanical Garden + Doddabetta + Avalanche + Pykara</td><td>₹280–320</td></tr>
+      <tr><td>🛂 Green Tax + E-Pass</td><td>₹25–50/bike, split 2 people = ₹15–25/head</td><td>₹25–50</td></tr>
+      <tr><td>🛣️ Tolls</td><td>Mysore Road tolls (approx, shared per bike)</td><td>₹150–200</td></tr>
+      <tr><td>🛍️ Shopping / Misc</td><td>Ooty chocolates, tea, contingency</td><td>₹300–500</td></tr>
+      <tr><td><strong>🏍️ TOTAL PER PERSON</strong></td><td>Comfortably within target with buffer</td><td><strong>₹3,200–4,550</strong></td></tr>
+    </tbody>
+  </table>
+</div>
+<div class="alert" style="margin-top:0; margin-bottom:28px;">
+  <span class="alert-title">✅ Budget Check</span>
+  Your ₹5–6k/head budget has a comfortable <strong>₹1,000–2,000 buffer per person</strong> for unexpected expenses, extra meals, or spontaneous activities. You're well-covered.
+</div>
+
+<hr class="divider">
+
+<!-- MAPS -->
+<p class="section-title">🗺️ Google Maps — Exact Locations</p>
+<div class="maps-grid">
+  <a class="map-link" href="https://maps.app.goo.gl/eH6tZ7oRtKqJnDCY7" target="_blank">
+    <span class="map-icon">🚦</span>
+    <div><strong>Electronic City (Start Point)</strong><small>Depart 6:00 AM sharp</small></div>
+    <span class="arrow">→</span>
+  </a>
+  <a class="map-link" href="https://maps.app.goo.gl/4D3MUdoB6EBzHFqb6" target="_blank">
+    <span class="map-icon">☕</span>
+    <div><strong>Kamat Restaurant, Channapatna</strong><small>Breakfast stop · 60 km from Bangalore</small></div>
+    <span class="arrow">→</span>
+  </a>
+  <a class="map-link" href="https://maps.app.goo.gl/Rb4yJHGKsNymGv9TA" target="_blank">
+    <span class="map-icon">⛽</span>
+    <div><strong>Mysore Ring Road Fuel Station</strong><small>Top-up before forest · 150 km mark</small></div>
+    <span class="arrow">→</span>
+  </a>
+  <a class="map-link" href="https://maps.app.goo.gl/e7gHWPVZqFyFfGjK7" target="_blank">
+    <span class="map-icon">🌿</span>
+    <div><strong>Bandipur Forest Entry (Karnataka)</strong><small>Enter before 5:00 PM · papers ready</small></div>
+    <span class="arrow">→</span>
+  </a>
+  <a class="map-link" href="https://maps.app.goo.gl/GD1UDxBEZYHF4EMG7" target="_blank">
+    <span class="map-icon">🛂</span>
+    <div><strong>Masinagudi Checkpost</strong><small>TN border · show e-Pass QR + pay Green Tax</small></div>
+    <span class="arrow">→</span>
+  </a>
+  <a class="map-link" href="https://maps.app.goo.gl/KFPPHcG8KcPzaMRq9" target="_blank">
+    <span class="map-icon">🏔️</span>
+    <div><strong>Doddabetta Peak</strong><small>Day 2 morning · highest point in Nilgiris</small></div>
+    <span class="arrow">→</span>
+  </a>
+  <a class="map-link" href="https://maps.app.goo.gl/tRJ1gUCDMbRQBxPN8" target="_blank">
+    <span class="map-icon">🌊</span>
+    <div><strong>Avalanche Lake</strong><small>28 km from Ooty · Day 2 highlight</small></div>
+    <span class="arrow">→</span>
+  </a>
+  <a class="map-link" href="https://maps.app.goo.gl/yJGEkpknM1Xhxhqz8" target="_blank">
+    <span class="map-icon">💧</span>
+    <div><strong>Pykara Waterfalls</strong><small>Day 2 afternoon · flows beautifully in June</small></div>
+    <span class="arrow">→</span>
+  </a>
+  <a class="map-link" href="https://maps.app.goo.gl/TSTnVJCHm8fAFfNS8" target="_blank">
+    <span class="map-icon">🍽️</span>
+    <div><strong>Shinkows Restaurant, Ooty</strong><small>Dinner Days 1 / 2</small></div>
+    <span class="arrow">→</span>
+  </a>
+  <a class="map-link" href="https://maps.app.goo.gl/sY3dGf1CXL4cSVBZ9" target="_blank">
+    <span class="map-icon">🌺</span>
+    <div><strong>Government Botanical Garden</strong><small>Day 1 evening · ₹50 entry</small></div>
+    <span class="arrow">→</span>
+  </a>
+</div>
+
+<hr class="divider">
+
+<!-- RISK -->
+<p class="section-title">⚠️ Risk Assessment</p>
+<div class="risk-grid">
+  <div class="risk-card warn">
+    <h3>☔ June Monsoon Risks</h3>
+    <ul>
+      <li>Ooty in June is wet — always. Rain gear is non-negotiable.</li>
+      <li>Sigur Ghat roads can be slippery — moss on tarmac.</li>
+      <li>Reduced visibility in Nilgiri fog. Use low beam, ride slow.</li>
+      <li>Pykara Falls may be swollen — don't enter the water.</li>
+      <li>Check road conditions at: https://tnroads.gov.in before Day 1.</li>
+    </ul>
+  </div>
+  <div class="risk-card warn">
+    <h3>🐘 Bandipur Wildlife Risks</h3>
+    <ul>
+      <li>Elephant herds cross NH 766 unpredictably — especially mornings.</li>
+      <li>If an elephant is on the road: stop engine, keep distance, wait.</li>
+      <li>Forest officials may hold you if herd is spotted — factor 30-min buffer.</li>
+      <li>Do not overtake or honk inside the forest stretch.</li>
+    </ul>
+  </div>
+  <div class="risk-card info">
+    <h3>🏍️ Rider Safety Tips</h3>
+    <ul>
+      <li>Break every 90 minutes. Bandipur + ghat stretch = fatigue zone.</li>
+      <li>Full-face helmets mandatory — rain + bugs on ghats.</li>
+      <li>Hunter 350 handles ghats comfortably. Scram 450 — watch tyre pressure on wet roads.</li>
+      <li>Avoid overtaking on any ghat hairpin bend.</li>
+      <li>Hunter: keep to ~120 km/h max on highway. Scram: comfortable up to 130.</li>
+    </ul>
+  </div>
+  <div class="risk-card info">
+    <h3>📞 Emergency Contacts</h3>
+    <ul>
+      <li>Police: <strong>100</strong> | Ambulance: <strong>108</strong></li>
+      <li>Highway Helpline: <strong>1033</strong></li>
+      <li>Bandipur Forest Range: <strong>08229-261016</strong></li>
+      <li>Gundlupet Police: <strong>08229-222033</strong></li>
+      <li>Ooty Govt Hospital: <strong>0423-2443025</strong></li>
+      <li>Royal Enfield Service, Ooty: Near Collectorate — call 1800 123 4567</li>
+    </ul>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- PACKING CHECKLIST -->
+<p class="section-title">🎒 Packing Checklist</p>
+<div class="checklist-grid">
+  <div class="check-group">
+    <h3>Riding Gear (Non-negotiable)</h3>
+    <ul>
+      <li>Full-face helmet (June monsoon — don't compromise)</li>
+      <li>Riding gloves (waterproof preferred)</li>
+      <li>Riding jacket with CE armor</li>
+      <li>Waterproof jacket / rain cover (ESSENTIAL for June)</li>
+      <li>Riding pants or thick jeans + knee guards</li>
+      <li>Ankle-covering boots (not sneakers — ghat roads)</li>
+      <li>Balaclava (Ooty cold + fog)</li>
+    </ul>
+  </div>
+  <div class="check-group">
+    <h3>Documents & Digital</h3>
+    <ul>
+      <li>DL — original + photocopy</li>
+      <li>RC Book — original + photocopy</li>
+      <li>Insurance certificate</li>
+      <li>PUC certificate</li>
+      <li>Ooty e-Pass QR (downloaded offline per vehicle)</li>
+      <li>Cash ₹500+ per couple (Green Tax + tolls + emergency)</li>
+      <li>Phone mount + charger cable</li>
+      <li>Offline Google Maps downloaded (Mysore + Ooty zones)</li>
+    </ul>
+  </div>
+  <div class="check-group">
+    <h3>Bike Essentials</h3>
+    <ul>
+      <li>Tyre pressure check + portable pump</li>
+      <li>Basic toolkit (Allen keys, zip ties, chain lube)</li>
+      <li>Spare fuse set</li>
+      <li>Tail bag / saddlebags — one per bike</li>
+      <li>Tow rope (emergency)</li>
+      <li>Power bank 10,000 mAh+</li>
+    </ul>
+  </div>
+  <div class="check-group">
+    <h3>Health & Comfort</h3>
+    <ul>
+      <li>First aid kit (bandages, antiseptic, ORS)</li>
+      <li>Paracetamol, antacid, antihistamine</li>
+      <li>Sunscreen SPF 50+</li>
+      <li>Water bottles (2 per person, fill at Mysore)</li>
+      <li>Energy bars / dry snacks for forest stretch</li>
+      <li>Dry bag / garbage bag for rain protection of luggage</li>
+    </ul>
+  </div>
+</div>
+
+<footer>
+  <strong>Bangalore → Ooty Bike Trip</strong> · June 19–21, 2026 · Hunter 350 + Scram 450 · 2 Couples<br><br>
+  Ride safe. Ride slow through Bandipur. The mountains aren't going anywhere. 🏔️<br><br>
+  e-Pass: epass.tnega.org · Petrol: ₹110.97/litre (Jun 2026, Bangalore) · Bandipur: bikes allowed 6 AM – 6 PM
+</footer>
+
+</body>
+</html>
