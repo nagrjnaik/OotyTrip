@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Bangalore → Ooty | Bike Trip Command Center</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --forest: #1a2e1a; --moss: #2d4a2d; --sage: #4a7c59; --mint: #7ab89a;
+    --mist: #b8d4c4; --cream: #f5f0e8; --amber: #d4873a; --warm: #f0e6d3;
+    --red: #c0392b; --ink: #1a1a1a;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body { background: var(--cream); color: var(--ink); font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.7; padding-bottom: 70px; }
+
+  .hero { background: var(--forest); color: var(--cream); padding: 60px 40px 50px; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 70% 30%, rgba(74,124,89,0.4) 0%, transparent 60%), radial-gradient(ellipse at 20% 80%, rgba(45,74,45,0.6) 0%, transparent 50%); }
+  .hero-tag { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--mint); margin-bottom: 16px; position: relative; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(36px, 6vw, 64px); line-height: 1.1; position: relative; margin-bottom: 12px; }
+  .hero h1 em { font-style: italic; color: var(--mint); }
+  .hero-sub { font-size: 14px; color: var(--mist); position: relative; margin-bottom: 36px; }
+  .hero-pills { display: flex; flex-wrap: wrap; gap: 10px; position: relative; }
+  .pill { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 6px 16px; font-size: 12px; color: var(--mist); font-family: 'DM Mono', monospace; }
+  .pill.highlight { background: var(--sage); border-color: var(--sage); color: white; }
+  .pill.red-pill { background: rgba(192,57,43,0.25); border-color: rgba(192,57,43,0.5); color: #ff9f9f; }
+  .pill.green-pill { background: rgba(74,124,89,0.3); border-color: rgba(74,124,89,0.5); color: var(--mint); }
+
+  .alert { background: #fff8f0; border-left: 4px solid var(--amber); padding: 16px 20px; margin: 28px 40px; border-radius: 0 8px 8px 0; font-size: 13.5px; }
+  .alert strong { color: var(--amber); font-weight: 600; }
+  .alert .alert-title { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--amber); margin-bottom: 6px; display: block; }
+  
+  .alert.critical { background: #fdf0ef; border-left-color: var(--red); }
+  .alert.critical strong { color: var(--red); }
+  .alert.critical .alert-title { color: var(--red); }
+
+  .overview { padding: 32px 40px; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+  .overview-card { background: var(--forest); color: var(--cream); border-radius: 12px; padding: 18px 20px; }
+  .overview-card .oc-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--mint); margin-bottom: 6px; }
+  .overview-card .oc-value { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; }
+  .overview-card .oc-sub { font-size: 11px; color: var(--mist); margin-top: 2px; }
+
+  .section-title { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--sage); padding: 0 40px; margin-bottom: 4px; margin-top: 40px; }
+  h2.day-title { font-family: 'Playfair Display', serif; font-size: 28px; padding: 0 40px; margin-bottom: 24px; color: var(--forest); }
+  h2.day-title span { font-style: italic; color: var(--sage); font-size: 20px; font-weight: 400; display: block; margin-top: 2px; }
+
+  .schedule-wrap { padding: 0 40px; margin-bottom: 28px; overflow-x: auto; }
+  .schedule { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13.5px; }
+  .schedule th { background: var(--forest); color: var(--mint); font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; padding: 10px 16px; text-align: left; }
+  .schedule th:first-child { border-radius: 8px 0 0 0; } .schedule th:last-child { border-radius: 0 8px 0 0; }
+  .schedule td { padding: 10px 16px; border-bottom: 1px solid rgba(0,0,0,0.06); vertical-align: top; }
+  .schedule tr:last-child td { border-bottom: none; }
+  .schedule tr:nth-child(even) td { background: rgba(0,0,0,0.02); }
+  .schedule .time { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--sage); white-space: nowrap; font-weight: 500; }
+  .schedule .tag { display: inline-block; background: var(--warm); border-radius: 4px; padding: 1px 7px; font-size: 11px; color: var(--amber); margin-left: 6px; font-family: 'DM Mono', monospace; }
+  .schedule .tag.green { background: #e8f5ee; color: var(--sage); }
+  .schedule .tag.red { background: #fdf0ef; color: var(--red); }
+  .pillion-tip { margin-top: 6px; font-size: 12px; color: var(--amber); font-style: italic; display: block; }
+  
+  /* Inline Map Link */
+  .map-link-inline { color: inherit; text-decoration: none; border-bottom: 2px solid var(--mint); transition: all 0.2s; font-weight: 500; }
+  .map-link-inline:hover { color: var(--sage); border-bottom-color: var(--sage); }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 0 40px; margin-bottom: 24px; }
+  @media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
+  .card { background: white; border-radius: 12px; padding: 20px; border: 1px solid rgba(0,0,0,0.07); }
+  .card h3 { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--sage); margin-bottom: 12px; }
+  .card ul { list-style: none; }
+  .card ul li { padding: 8px 0; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 13.5px; display: flex; gap: 10px; align-items: flex-start; }
+  .card ul li:last-child { border-bottom: none; }
+  .card ul li .icon { font-size: 18px; flex-shrink: 0; line-height: 1.2; }
+  .card ul li strong { display: block; font-weight: 500; }
+  .card ul li small { color: #777; font-size: 12px; display: block; line-height: 1.4; margin-top: 2px; }
+  .card ul li .cost { margin-left: auto; font-family: 'DM Mono', monospace; font-size: 12px; color: var(--amber); white-space: nowrap; }
+  .card ul li a { color: var(--sage); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; display: inline-block; }
+
+  .hotel-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13px; }
+  .hotel-table th { background: var(--moss); color: var(--mint); font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; padding: 8px 14px; text-align: left; }
+  .hotel-table td { padding: 9px 14px; border-bottom: 1px solid rgba(0,0,0,0.06); }
+  .hotel-table tr:last-child td { border-bottom: none; }
+  .hotel-table .budget-tag { font-family: 'DM Mono', monospace; font-size: 10px; padding: 2px 8px; border-radius: 4px; background: #e8f5ee; color: var(--sage); }
+  .hotel-table .mid-tag { font-family: 'DM Mono', monospace; font-size: 10px; padding: 2px 8px; border-radius: 4px; background: #fff8f0; color: var(--amber); }
+
+  .divider { border: none; border-top: 1px solid rgba(0,0,0,0.08); margin: 36px 40px; }
+
+  .docs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; padding: 0 40px; margin-bottom: 28px; }
+  .doc-item { background: white; border: 1px solid rgba(0,0,0,0.07); border-radius: 10px; padding: 14px 16px; display: flex; gap: 12px; align-items: flex-start; font-size: 13px; }
+  .doc-item .doc-icon { font-size: 20px; flex-shrink: 0; }
+  .doc-item strong { display: block; font-weight: 500; margin-bottom: 2px; }
+  .doc-item small { color: #777; font-size: 12px; }
+
+  .budget-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13.5px; }
+  .budget-table th { background: var(--forest); color: var(--mint); font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; padding: 10px 16px; text-align: left; }
+  .budget-table td { padding: 10px 16px; border-bottom: 1px solid rgba(0,0,0,0.06); }
+  .budget-table tr:last-child td { border-bottom: none; font-weight: 600; font-size: 15px; background: var(--warm); }
+  .budget-table td:last-child { text-align: right; font-family: 'DM Mono', monospace; font-size: 13px; color: var(--forest); }
+  .budget-table tr:last-child td:last-child { color: var(--sage); font-size: 16px; }
+
+  .risk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 0 40px; margin-bottom: 28px; }
+  @media (max-width: 700px) { .risk-grid { grid-template-columns: 1fr; } }
+  .risk-card { border-radius: 12px; padding: 18px 20px; font-size: 13.5px; }
+  .risk-card.warn { background: #fff8f0; border: 1px solid #f0d5b0; }
+  .risk-card.info { background: #f0f8f4; border: 1px solid #b0d4c0; }
+  .risk-card h3 { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
+  .risk-card.warn h3 { color: var(--amber); } .risk-card.info h3 { color: var(--sage); }
+  .risk-card ul { list-style: none; }
+  .risk-card ul li { padding: 4px 0; padding-left: 14px; position: relative; }
+  .risk-card ul li::before { content: '›'; position: absolute; left: 0; color: inherit; }
+
+  .checklist-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 0 40px; margin-bottom: 28px; }
+  @media (max-width: 700px) { .checklist-grid { grid-template-columns: 1fr; } }
+  .check-group { background: white; border: 1px solid rgba(0,0,0,0.07); border-radius: 12px; padding: 18px 20px; }
+  .check-group h3 { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--sage); margin-bottom: 10px; }
+  .check-group ul { list-style: none; }
+  .check-group ul li { padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); font-size: 13px; display: flex; gap: 8px; align-items: flex-start; }
+  .check-group ul li:last-child { border-bottom: none; }
+  .check-group ul li::before { content: '☐'; color: var(--mint); flex-shrink: 0; }
+
+  .maps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; padding: 0 40px; margin-bottom: 28px; }
+  @media(max-width:900px){ .maps-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { .maps-grid { grid-template-columns: 1fr; } }
+  
+  .map-card { background: white; border: 1px solid rgba(0,0,0,0.08); border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 10px; transition: all 0.2s; text-decoration: none; color: var(--ink); }
+  .map-card:hover { border-color: var(--sage); transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.06); }
+  .map-card .mc-head { display: flex; align-items: center; gap: 12px; }
+  .map-card .mc-icon { font-size: 20px; flex-shrink: 0; background: var(--warm); width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; border-radius: 8px; }
+  .map-card strong { font-weight: 600; font-size: 14px; line-height: 1.2; display: block; }
+  .map-card small { color: #777; font-size: 10px; display: block; margin-top: 3px; font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.5px; }
+  .map-card p { font-size: 12.5px; color: #555; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: auto; }
+  .map-card .arrow-row { display: flex; justify-content: flex-end; color: var(--sage); font-size: 16px; margin-top: 4px; }
+  .map-card.highlight { background: #f0f8f4; border-color: var(--sage); }
+  .map-card.highlight .mc-icon { background: #e8f5ee; }
+
+  .epass-box { margin: 0 40px 28px; background: var(--forest); color: var(--cream); border-radius: 16px; padding: 24px 28px; }
+  .epass-box h3 { font-family: 'Playfair Display', serif; font-size: 22px; margin-bottom: 10px; }
+  .epass-box p { font-size: 13.5px; color: var(--mist); margin-bottom: 14px; }
+  .epass-box a.btn { display: inline-block; background: var(--mint); color: var(--forest); font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500; padding: 8px 20px; border-radius: 8px; text-decoration: none; }
+  .epass-box .epass-steps { margin-top: 14px; list-style: none; display: flex; flex-wrap: wrap; gap: 8px; }
+  .epass-box .epass-steps li { background: rgba(255,255,255,0.08); border-radius: 6px; padding: 4px 12px; font-size: 12px; color: var(--mist); font-family: 'DM Mono', monospace; }
+
+  .fuel-stat { padding: 0 40px; margin-bottom: 28px; }
+  .fuel-stat h3 { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--sage); margin-bottom: 14px; }
+  .fuel-row { display: flex; align-items: center; gap: 16px; margin-bottom: 12px; font-size: 13px; }
+  .fuel-label { width: 130px; flex-shrink: 0; }
+  .fuel-bar-bg { flex: 1; background: rgba(0,0,0,0.07); border-radius: 4px; height: 8px; }
+  .fuel-bar { height: 8px; border-radius: 4px; background: var(--sage); }
+  .fuel-cost { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--amber); width: 80px; text-align: right; }
+
+  footer { background: var(--forest); color: var(--mist); padding: 28px 40px; font-size: 12px; font-family: 'DM Mono', monospace; letter-spacing: 0.5px; margin-top: 40px; }
+  footer strong { color: var(--mint); }
+  
+  .quick-nav {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: rgba(245, 240, 232, 0.95);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid var(--border-strong);
+    display: flex; overflow-x: auto;
+    padding: 12px 16px 20px 16px; gap: 10px;
+    z-index: 1000; scrollbar-width: none; box-shadow: 0 -8px 24px rgba(26, 46, 26, 0.08);
+  }
+  .quick-nav::-webkit-scrollbar { display: none; }
+  .nav-btn {
+    background: var(--bg-card); color: var(--text-main);
+    border: 1px solid var(--border-color); padding: 10px 16px;
+    border-radius: 30px; font-family: 'DM Mono', monospace; font-weight: 500; font-size: 12px;
+    text-transform: uppercase; letter-spacing: 1px; white-space: nowrap;
+    display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); text-decoration: none;
+  }
+  .nav-btn:active { background: var(--warm); border-color: var(--amber); }
+
+  @media (max-width: 600px) {
+    .hero, .overview, .section-title, h2.day-title, .schedule-wrap, .two-col, .divider,
+    .docs-grid, .maps-grid, .risk-grid, .checklist-grid, .epass-box, .fuel-stat, footer { padding-left: 20px; padding-right: 20px; }
+    .alert { margin: 20px; }
+    .overview { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Quick Action Bar -->
+<nav class="quick-nav">
+  <a href="#hero" class="nav-btn">📍 Top</a>
+  <a href="#day1" class="nav-btn">🏍️ Day 1</a>
+  <a href="#day2" class="nav-btn">🏔️ Day 2</a>
+  <a href="#day3" class="nav-btn">🏁 Day 3</a>
+  <a href="#prep" class="nav-btn">🎒 Prep</a>
+  <a href="#maps" class="nav-btn">🗺️ Maps</a>
+</nav>
+
+<div class="hero" id="hero">
+  <div class="hero-tag">🏍️ Bike Trip Itinerary · June 2026</div>
+  <h1>Bangalore<br>to <em>Ooty</em></h1>
+  <div class="hero-sub">Electronic City · 2 Bikes · 2 Couples · 3 Days of Pure Bliss</div>
+  <div class="hero-pills">
+    <span class="pill red-pill">⛔ Masinagudi BANNED</span>
+    <span class="pill green-pill">✅ Gudalur Route MANDATORY</span>
+    <span class="pill highlight">Hunter 350 + Scram 450</span>
+    <span class="pill">~620 km round trip</span>
+    <span class="pill">Monsoon Ride ⛈️</span>
+  </div>
+</div>
+
+<div class="alert critical">
+  <span class="alert-title">⚠️ CRITICAL ROUTE CHANGE — CONFIRMED MAY 2026</span>
+  <strong>Masinagudi / Kalhatty Ghat is completely BANNED for tourist vehicles.</strong> Police at Theppakadu will turn you back immediately. <strong>GUDALUR ROUTE IS MANDATORY BOTH WAYS.</strong> It adds ~25 km but is legally permitted and safer for pillions ascending the ghats.
+</div>
+
+<p class="section-title">Trip Overview</p>
+<div class="overview">
+  <div class="overview-card"><div class="oc-label">Route</div><div class="oc-value" style="font-size:14px;">E-City → Gundlupet → Bandipur → Gudalur → Ooty</div></div>
+  <div class="overview-card"><div class="oc-label">Total Distance</div><div class="oc-value">~620 km</div><div class="oc-sub">~310 km each way</div></div>
+  <div class="overview-card"><div class="oc-label">Petrol Price</div><div class="oc-value">₹110.97</div><div class="oc-sub">Per litre, Bangalore Jun 2026</div></div>
+  <div class="overview-card"><div class="oc-label">Depart</div><div class="oc-value">6:00 AM</div><div class="oc-sub">Electronic City, Jun 19</div></div>
+  <div class="overview-card"><div class="oc-label">Return By</div><div class="oc-value">4:30 PM</div><div class="oc-sub">Electronic City, Jun 21</div></div>
+  <div class="overview-card"><div class="oc-label">Difficulty</div><div class="oc-value">Moderate</div><div class="oc-sub">Monsoon ghat riding</div></div>
+</div>
+
+<hr class="divider">
+
+<!-- DAY 1 -->
+<p class="section-title" id="day1">Day 1 — Friday, June 19</p>
+<h2 class="day-title">Into the Nilgiris <span>Electronic City → Ooty · ~310 km</span></h2>
+<div class="schedule-wrap">
+  <table class="schedule">
+    <thead><tr><th>Time</th><th>Activity</th></tr></thead>
+    <tbody>
+      <tr><td class="time">05:30 AM</td><td>Wake up. Rain gear packed, e-Pass QR ready offline on both phones.</td></tr>
+      <tr><td class="time">06:00 AM</td><td>🚦 <a href="https://maps.google.com/?cid=465172169174871196" target="_blank" class="map-link-inline"><strong>Depart Electronic City</strong></a> → Hosur Rd → NH 275 (Mysore Road) <span class="tag red">Leave Sharp</span></td></tr>
+      <tr><td class="time">07:10 AM</td><td>☕ Breakfast — <a href="https://maps.google.com/?cid=13542995223052568208" target="_blank" class="map-link-inline"><strong>Kamat Lokaruchi, Ramanagara</strong></a>. Idli, vada, filter coffee. <span class="pillion-tip">🎒 Check posture comfort. Walk around to loosen stiff legs.</span></td></tr>
+      <tr><td class="time">08:40 AM</td><td>🦵 Stretch Break — <a href="https://maps.google.com/?q=Maddur+Karnataka" target="_blank" class="map-link-inline"><strong>Maddur Area</strong></a>. Quick chai, relieve lower back tension. 15 mins.</td></tr>
+      <tr><td class="time">09:25 AM</td><td>⛽ Fuel — <a href="https://maps.google.com/?q=Mysore+Ring+Road+BPCL" target="_blank" class="map-link-inline"><strong>Mysore Ring Road</strong></a>. Top off tanks. Bypass city. Turn onto NH 766.</td></tr>
+      <tr><td class="time">11:00 AM</td><td>⛽ Fuel CRITICAL — <a href="https://maps.google.com/?cid=18300221013153202791" target="_blank" class="map-link-inline"><strong>Shell, Gundlupet</strong></a>. LAST pump before Bandipur. Fill to 100%. <span class="pillion-tip">🎒 Brief pillions: Forest zone next. Maintain absolute silence.</span></td></tr>
+      <tr><td class="time">11:25 AM</td><td>🌿 <a href="https://maps.google.com/?cid=2118239214865394980" target="_blank" class="map-link-inline"><strong>Enter Bandipur</strong></a>. 40 km/h max. No honking. <span class="tag red">Wildlife Zone</span></td></tr>
+      <tr><td class="time">12:05 PM</td><td>🛂 <a href="https://maps.google.com/?q=Theppakadu+Checkpost+Mudumalai" target="_blank" class="map-link-inline"><strong>Theppakadu Checkpost</strong></a>. Show e-Pass. TAKE LEFT TOWARDS GUDALUR. <span class="tag green">Left Turn</span></td></tr>
+      <tr><td class="time">01:00 PM</td><td>🍽️ Lunch — <a href="https://maps.google.com/?q=Gudalur+Nilgiris" target="_blank" class="map-link-inline"><strong>Gudalur Town</strong></a>. Last proper meal before the steep ghats. <span class="pillion-tip">🎒 Ghat Briefing: 55km uphill. Lean WITH rider. Hold grab rail.</span></td></tr>
+      <tr><td class="time">01:25 PM</td><td>🏔️ <strong>Gudalur Ghat climb</strong>. Monsoon speeds: 25-40 km/h. Enjoy the tea estate views.</td></tr>
+      <tr><td class="time">03:00 PM</td><td>🏡 <a href="https://maps.app.goo.gl/q6yi8v6VxJ1tHZ4CA" target="_blank" class="map-link-inline"><strong>Arrive Booked Airbnb, Ooty</strong></a>. Secure parking. Hot shower. <span class="tag green">Mission Complete</span></td></tr>
+      <tr><td class="time">04:00 PM</td><td>🌺 <a href="https://maps.google.com/?cid=9035523003987112847" target="_blank" class="map-link-inline"><strong>Botanical Garden</strong></a> — easy stroll to stretch legs. Closes 6:30 PM. ₹100 entry.</td></tr>
+      <tr><td class="time">08:00 PM</td><td>🍜 Dinner — <a href="https://maps.google.com/?cid=5920728672097556824" target="_blank" class="map-link-inline"><strong>Shinkows Restaurant</strong></a>. Cozy Chinese-Indian, great for couples.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="two-col">
+  <div class="card">
+    <h3>🛣️ Road Notes — Day 1</h3>
+    <ul>
+      <li><span class="icon">✅</span><div><strong>NH 275 (Mysore Road)</strong><small>Smooth 4-lane. Fast and easy cruising.</small></div></li>
+      <li><span class="icon">🐘</span><div><strong>Bandipur Forest</strong><small>Enforced 40 km/h. Do not stop or honk.</small></div></li>
+      <li><span class="icon">🌧️</span><div><strong>Gudalur Ghat (55 km)</strong><small>Gentler than Kalhatty, but mossy tarmac in June.</small></div></li>
+      <li><span class="icon">📡</span><div><strong>Dead Zone</strong><small>Zero signal in Bandipur. Keep Maps & e-Pass offline.</small></div></li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>🏨 Stay Options — Ooty</h3>
+    <ul>
+      <li><span class="icon">🏡</span><div><strong>Booked Airbnb Stay</strong><small>Your confirmed private stay. Safe parking included.</small><a href="https://maps.app.goo.gl/q6yi8v6VxJ1tHZ4CA" target="_blank">Navigate →</a></div></li>
+      <li><span class="icon">🏨</span><div><strong>Hotel Nahar (Backup)</strong><small>₹900–1,200. Prime location.</small></div></li>
+      <li><span class="icon">🏨</span><div><strong>TTDC Tamil Nadu (Backup)</strong><small>₹700–900. Government run.</small></div></li>
+    </ul>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- DAY 2 -->
+<p class="section-title" id="day2">Day 2 — Saturday, June 20</p>
+<h2 class="day-title">The Chill Loop <span>Ooty local · ~80 km riding</span></h2>
+<div class="schedule-wrap">
+  <table class="schedule">
+    <thead><tr><th>Time</th><th>Activity</th></tr></thead>
+    <tbody>
+      <tr><td class="time">07:00 AM</td><td>🏔️ <a href="https://maps.google.com/?cid=2183524389589133532" target="_blank" class="map-link-inline"><strong>Doddabetta Peak</strong></a> — highest in Nilgiris. Go early before clouds take over. ₹30 entry. <span class="tag green">Trip Highlight</span></td></tr>
+      <tr><td class="time">08:30 AM</td><td>🫖 On the way back — <a href="https://maps.google.com/?cid=15573124602750895356" target="_blank" class="map-link-inline"><strong>Tea Factory & Museum</strong></a>. ₹20 entry + free tea tasting.</td></tr>
+      <tr><td class="time">09:30 AM</td><td>🍳 Breakfast — <a href="https://maps.google.com/?q=Hyderabad+Bakery+Ooty" target="_blank" class="map-link-inline"><strong>Hyderabad Bakery</strong></a> or local town spot.</td></tr>
+      <tr><td class="time">10:30 AM</td><td>🏞️ <a href="https://maps.google.com/?cid=15808824796755561689" target="_blank" class="map-link-inline"><strong>Avalanche Lake</strong></a> — 28 km ride through beautiful shola forest. ₹100 entry. <span class="tag green">Trip Highlight</span></td></tr>
+      <tr><td class="time">01:30 PM</td><td>🍽️ Lunch on return — dhaba on Ooty-Avalanche road.</td></tr>
+      <tr><td class="time">03:00 PM</td><td>💧 <a href="https://maps.google.com/?cid=16257236970263194092" target="_blank" class="map-link-inline"><strong>Pykara Waterfall</strong></a> — flowing fully in June monsoon. 10-min trek. ₹40 entry.</td></tr>
+      <tr><td class="time">05:30 PM</td><td>📸 Postcard Ooty moment on the ride back. Stop and take photos.</td></tr>
+      <tr><td class="time">08:00 PM</td><td>🍲 Dinner — <a href="https://maps.google.com/?cid=5920728672097556824" target="_blank" class="map-link-inline"><strong>Shinkows</strong></a> or <a href="https://maps.google.com/?q=Hotel+Nahar+Ooty" target="_blank" class="map-link-inline"><strong>Hotel Nahar</strong></a>.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="two-col">
+  <div class="card">
+    <h3>📍 Top Attractions</h3>
+    <ul>
+      <li><span class="icon">🏔️</span><div><strong>Doddabetta Peak</strong><small>Highest point. Freezing early morning.</small></div></li>
+      <li><span class="icon">🌊</span><div><strong>Avalanche Lake</strong><small>Underrated gem. Best ride of the trip.</small></div></li>
+      <li><span class="icon">💧</span><div><strong>Pykara Falls</strong><small>Peak flow in June. Short walk required.</small></div></li>
+      <li><span class="icon">🫖</span><div><strong>Tea Factory</strong><small>Live demonstration + free fresh tea.</small></div></li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>🍽️ Food Spots</h3>
+    <ul>
+      <li><span class="icon">🌅</span><div><strong>Kamat Lokaruchi</strong><small>Day 1 Breakfast. Thatte Idli, Coffee.</small></div><span class="cost">~₹100</span></li>
+      <li><span class="icon">🍜</span><div><strong>Shinkows Restaurant</strong><small>Ooty Dinner. Historic Chinese-Indian.</small></div><span class="cost">~₹250</span></li>
+      <li><span class="icon">🍫</span><div><strong>King Star Chocolates</strong><small>Commercial St. Homemade chocolates.</small></div><span class="cost">~₹150</span></li>
+      <li><span class="icon">🍽️</span><div><strong>RRR Restaurant</strong><small>Day 3 Lunch near Maddur. South Thali.</small></div><span class="cost">~₹150</span></li>
+    </ul>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- DAY 3 -->
+<p class="section-title" id="day3">Day 3 — Sunday, June 21 · Return</p>
+<h2 class="day-title">Road Home <span>Ooty → Electronic City · ~310 km</span></h2>
+<div class="schedule-wrap">
+  <table class="schedule">
+    <thead><tr><th>Time</th><th>Activity</th></tr></thead>
+    <tbody>
+      <tr><td class="time">07:30 AM</td><td>🏁 <a href="https://maps.app.goo.gl/q6yi8v6VxJ1tHZ4CA" target="_blank" class="map-link-inline"><strong>Depart Ooty Airbnb</strong></a> — Tyres checked. Rain gear on. Foggy and cold. <span class="tag red">Return Route via Gudalur</span></td></tr>
+      <tr><td class="time">07:30 AM</td><td>🏔️ <strong>Gudalur Ghat Descent</strong>. Engine braking mandatory! Most technical segment of trip. <span class="pillion-tip">🎒 Reassure pillions: Downhill feels scarier but is safe.</span></td></tr>
+      <tr><td class="time">09:15 AM</td><td>⛽ Fuel & Stretch — <a href="https://maps.google.com/?q=Gudalur+Nilgiris" target="_blank" class="map-link-inline"><strong>Gudalur Town</strong></a>. Check brake heat after descent.</td></tr>
+      <tr><td class="time">10:10 AM</td><td>🛂 <a href="https://maps.google.com/?q=Theppakadu+Checkpost+Mudumalai" target="_blank" class="map-link-inline"><strong>Theppakadu Checkpost</strong></a> — Enter Bandipur. Well before 6 PM curfew.</td></tr>
+      <tr><td class="time">11:05 AM</td><td>⛽ Fuel — <a href="https://maps.google.com/?cid=18300221013153202791" target="_blank" class="map-link-inline"><strong>Gundlupet</strong></a>. Full tank required for long highway stretch.</td></tr>
+      <tr><td class="time">12:35 PM</td><td>🦵 Stretch — <a href="https://maps.google.com/?q=Mysore+Ring+Road+BPCL" target="_blank" class="map-link-inline"><strong>Mysore Ring Road</strong></a>. Bypass city limits. Stretch saddle soreness.</td></tr>
+      <tr><td class="time">01:45 PM</td><td>🍽️ Lunch — <a href="https://maps.google.com/?q=RRR+Restaurant+Maddur" target="_blank" class="map-link-inline"><strong>RRR Restaurant, Maddur Area</strong></a>. Relax for a solid 35 minutes here.</td></tr>
+      <tr><td class="time">04:00 PM</td><td>🏠 <a href="https://maps.google.com/?cid=465172169174871196" target="_blank" class="map-link-inline"><strong>Arrive Electronic City</strong></a>. Watch for Sunday evening traffic near Bidadi. <span class="tag green">Home Safe</span></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<hr class="divider" id="prep">
+
+<!-- E-PASS -->
+<p class="section-title">🛂 Ooty E-Pass — Mandatory, Free</p>
+<div class="epass-box">
+  <h3>Apply Before You Enter Bandipur</h3>
+  <p>Mandatory year-round for all non-TN-43 vehicles. Mobile signal is zero inside Bandipur — apply at home or before Gundlupet.</p>
+  <a class="btn" href="https://epass.tnega.org" target="_blank">→ epass.tnega.org</a>
+  <ul class="epass-steps">
+    <li>1. Select "Nilgiris District"</li>
+    <li>2. Upload RC book image</li>
+    <li>3. Get QR instantly</li>
+    <li>4. Screenshot offline</li>
+  </ul>
+</div>
+
+<!-- PREP GRIDS -->
+<p class="section-title">⚠️ Risk & Prep</p>
+<div class="risk-grid">
+  <div class="risk-card warn">
+    <h3>☔ Monsoon Riding Rules</h3>
+    <ul>
+      <li>Wet tarmac = 50% more braking distance.</li>
+      <li>Low beam only in fog. High beams blind you.</li>
+      <li>Drop tyre pressure by 2-3 PSI for wet ghat grip.</li>
+      <li>Engine braking is mandatory downhill.</li>
+    </ul>
+  </div>
+  <div class="risk-card warn">
+    <h3>🎒 Pillion Mechanics</h3>
+    <ul>
+      <li>Lean WITH the rider. Don't fight physics.</li>
+      <li>Hold the grab rail, not the rider's shoulders.</li>
+      <li>Feet strictly on pegs. Never dangle feet.</li>
+      <li>Don't look down valley drops to avoid panic.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="checklist-grid">
+  <div class="check-group">
+    <h3>Documents & Digital</h3>
+    <ul>
+      <li>Driving Licence (Original)</li>
+      <li>RC Book (Original)</li>
+      <li>Valid Insurance & PUC</li>
+      <li>Ooty e-Pass QR (Offline)</li>
+      <li>Offline Google Maps (Mysore + Ooty)</li>
+    </ul>
+  </div>
+  <div class="check-group">
+    <h3>Bike & Gear</h3>
+    <ul>
+      <li>Full-Face Helmets (Both)</li>
+      <li>Rain Gear / Waterproof Jackets</li>
+      <li>Tyre Inflator & Toolkit</li>
+      <li>Garbage bags (waterproofing luggage)</li>
+      <li>Power bank 10,000 mAh+</li>
+    </ul>
+  </div>
+</div>
+
+<!-- FUEL STATS -->
+<p class="section-title">⛽ Fuel Cost Breakdown</p>
+<div class="fuel-stat">
+  <h3>Based on ₹110.97/litre · ~620 km round trip per bike</h3>
+  <div class="fuel-row"><span class="fuel-label">Hunter 350 (~36 kmpl)</span><div class="fuel-bar-bg"><div class="fuel-bar" style="width:72%"></div></div><span class="fuel-cost">~₹1,900/bike</span></div>
+  <div class="fuel-row"><span class="fuel-label">Scram 450 (~30 kmpl)</span><div class="fuel-bar-bg"><div class="fuel-bar" style="width:88%;background:#d4873a"></div></div><span class="fuel-cost">~₹2,300/bike</span></div>
+  <small style="color:#777;font-size:12px;">Total estimated trip budget per person (Fuel + Stay + Food) = ~₹4,500 - ₹5,000</small>
+</div>
+
+<hr class="divider" id="maps">
+
+<!-- MAPS DIRECTORY -->
+<p class="section-title">🗺️ Complete Maps Directory</p>
+<h2 class="day-title">1-Tap Navigation <span>Every waypoint sorted for quick access</span></h2>
+
+<div class="maps-grid">
+  
+  <a class="map-card" href="https://maps.google.com/?cid=465172169174871196" target="_blank">
+    <div class="mc-head"><div class="mc-icon">🚦</div><div><strong>Electronic City</strong><small>Start Point</small></div></div>
+    <p>Designated starting point in Bengaluru. Leave by 6 AM.</p>
+    <div class="arrow-row">→</div>
+  </a>
+
+  <a class="map-card" href="https://maps.google.com/?cid=13542995223052568208" target="_blank">
+    <div class="mc-head"><div class="mc-icon">🥞</div><div><strong>Kamat Lokaruchi</strong><small>Food Stop</small></div></div>
+    <p>Iconic highway breakfast. Idli, vada, filter coffee.</p>
+    <div class="arrow-row">→</div>
+  </a>
+
+  <a class="map-card" href="https://maps.google.com/?q=Mysore+Ring+Road+BPCL" target="_blank">
+    <div class="mc-head"><div class="mc-icon">⛽</div><div><strong>Mysore Ring Road</strong><small>Fuel Stop</small></div></div>
+    <p>Bypass the city. Top up fuel and take the NH 766 turn.</p>
+    <div class="arrow-row">→</div>
+  </a>
+
+  <a class="map-card" href="https://maps.google.com/?cid=18300221013153202791" target="_blank">
+    <div class="mc-head"><div class="mc-icon">⛽</div><div><strong>Shell Gundlupet</strong><small>Mandatory Fuel</small></div></div>
+    <p>The last reliable pump before entering Bandipur Forest.</p>
+    <div class="arrow-row">→</div>
+  </a>
+
+  <a class="map-card" href="https://maps.google.com/?cid=2118239214865394980" target="_blank">
+    <div class="mc-head"><div class="mc-icon">🐅</div><div><strong>Bandipur Reserve</strong><small>Wildlife Zone</small></div></div>
+    <p>Karnataka entry. 40kmph strictly enforced. No honking.</p>
+    <div class="arrow-row">→</div>
+  </a>
+
+  <a class="map-card" href="https://maps.google.com/?q=Theppakadu+Checkpost+Mudumalai" target="_blank">
+    <div class="mc-head"><div class="mc-icon">🛂</div><div><strong>Theppakadu Post</strong><small>TN Checkpost</small></div></div>
+    <p>Mandatory LEFT turn here towards Gudalur.</p>
+    <div class="arrow-row">→</div>
+  </a>
+
+  <a class="map-card" href="https://maps.google.com/?q=Gudalur+Nilgiris" target="_blank">
+    <div class="mc-head"><div class="mc-icon">🏘️</div><div><strong>Gudalur Town</strong><small>Mid-way Pit Stop</small></div></div>
+    <p>Last proper meal spot before the 55km ghat ascent.</p>
+    <div class="arrow-row">→</div>
+  </a>
+
+  <a class="map-card highlight" href="https://maps.app.goo.gl/q6yi8v6VxJ1tHZ4CA" target="_blank">
+    <div class="mc-head"><div class="mc-icon">🏡</div><div><strong>Booked Airbnb</strong><small>Accommodation</small></div></div>
+    <p>Your confirmed private stay in Ooty with safe parking.</p>
+    <div class="arrow-row">→</div>
+  </a>
+
+  <a class="map-card" href="https://maps.google.com/?cid=9035523003987112847" target="_blank">
+    <div class="mc-head"><div class="mc-icon">🌺</div><div><strong>Botanical Garden</strong><small>Attraction</small></div></div>
+    <p>Historic 55-acre garden featuring rare shrubs and flowers.</p>
+    <div class="arrow-row">→</div>
+  </a>
+
+  <a class="map-card" href="https://maps.google.com/?cid=5920728672097556824" target="_blank">
+    <div class="mc-head"><div class="mc-icon">🍜</div><div><strong>Shinkows Diner</strong><small>Heritage Food</small></div></div>
+    <p>Legendary Chinese-Indian cuisine. Perfect for dinner.</p>
+    <div class="arrow-row">→</div>
+  </a>
+
+  <a class="map-card" href="https://maps.google.com/?cid=2183524389589133532" target="_blank">
+    <div class="mc-head"><div class="mc-icon">🏔️</div><div><strong>Doddabetta Peak</strong><small>Attraction</small></div></div>
+    <p>Highest peak. Visit strictly before 8 AM for clear views.</p>
+    <div class="arrow-row">→</div>
+  </a>
+
+  <a class="map-card" href="https://maps.google.com/?cid=15573124602750895356" target="_blank">
+    <div class="mc-head"><div class="mc-icon">🫖</div><div><strong>Tea Factory</strong><small>Museum</small></div></div>
+    <p>Live tea-making demonstration and free fresh tea tasting.</p>
+    <div class="arrow-row">→</div>
+  </a>
+
+  <a class="map-card" href="https://maps.google.com/?cid=15808824796755561689" target="_blank">
+    <div class="mc-head"><div class="mc-icon">🌊</div><div><strong>Avalanche Lake</strong><small>Attraction</small></div></div>
+    <p>Breathtaking ride through shola forest to a pristine lake.</p>
+    <div class="arrow-row">→</div>
+  </a>
+
+  <a class="map-card" href="https://maps.google.com/?cid=16257236970263194092" target="_blank">
+    <div class="mc-head"><div class="mc-icon">💧</div><div><strong>Pykara Waterfall</strong><small>Attraction</small></div></div>
+    <p>Flowing beautifully in June. Requires a short 10-min trek.</p>
+    <div class="arrow-row">→</div>
+  </a>
+
+  <a class="map-card" href="https://maps.google.com/?cid=5495632777427017569" target="_blank">
+    <div class="mc-head"><div class="mc-icon">🪨</div><div><strong>Needle Rock</strong><small>Viewpoint</small></div></div>
+    <p>360-degree panoramic vantage point on the Gudalur road.</p>
+    <div class="arrow-row">→</div>
+  </a>
+
+  <a class="map-card" href="https://maps.google.com/?cid=15702393937252633986" target="_blank">
+    <div class="mc-head"><div class="mc-icon">🏞️</div><div><strong>Upper Bhavani</strong><small>Safari Only</small></div></div>
+    <p>Restricted-access reservoir. Requires forest safari bus.</p>
+    <div class="arrow-row">→</div>
+  </a>
+
+  <a class="map-card" href="https://maps.google.com/?cid=557616291858522310" target="_blank">
+    <div class="mc-head"><div class="mc-icon">🌹</div><div><strong>Rose Garden</strong><small>Attraction</small></div></div>
+    <p>One of India's largest rose collections on Elk Hill.</p>
+    <div class="arrow-row">→</div>
+  </a>
+
+  <a class="map-card" href="https://maps.google.com/?cid=14014540392416533997" target="_blank">
+    <div class="mc-head"><div class="mc-icon">⛵</div><div><strong>Ooty Lake</strong><small>Attraction</small></div></div>
+    <p>Classic pedal and row boating experiences under trees.</p>
+    <div class="arrow-row">→</div>
+  </a>
+
+  <a class="map-card" href="https://maps.google.com/?cid=6471543660076174103" target="_blank">
+    <div class="mc-head"><div class="mc-icon">🏞️</div><div><strong>Lamb's Rock</strong><small>Coonoor View</small></div></div>
+    <p>Spectacular ledge overlooking mist-clad valleys in Coonoor.</p>
+    <div class="arrow-row">→</div>
+  </a>
+
+  <a class="map-card" href="https://maps.google.com/?cid=10113835304424702055" target="_blank">
+    <div class="mc-head"><div class="mc-icon">🌳</div><div><strong>Sim's Park</strong><small>Coonoor Park</small></div></div>
+    <p>Peaceful botanical garden with old-growth trees.</p>
+    <div class="arrow-row">→</div>
+  </a>
+
+  <a class="map-card" href="https://maps.google.com/?q=RRR+Restaurant+Maddur" target="_blank">
+    <div class="mc-head"><div class="mc-icon">🍽️</div><div><strong>RRR Restaurant</strong><small>Return Food Stop</small></div></div>
+    <p>Day 3 lunch near Maddur. Incredible South Indian Thali.</p>
+    <div class="arrow-row">→</div>
+  </a>
+
+</div>
+
+<footer>
+  <strong>Bangalore → Ooty Bike Trip</strong> · June 19–21, 2026 · Hunter 350 + Scram 450 · 2 Couples<br><br>
+  Ride safe. Take it slow through Bandipur. The mountains aren't going anywhere. 🏔️<br><br>
+  e-Pass: epass.tnega.org · Petrol: ₹110.97/litre · Bandipur: bikes allowed 6 AM – 6 PM
+</footer>
+
+<script>
+  // Smooth scrolling for bottom navigation
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      document.querySelector(this.getAttribute('href')).scrollIntoView({
+        behavior: 'smooth'
+      });
+    });
+  });
+
+  // Interactive Checklist
+  document.querySelectorAll('.task-item').forEach(item => {
+    item.addEventListener('click', () => item.classList.toggle('done'));
+  });
+</script>
+</body>
+</html>
